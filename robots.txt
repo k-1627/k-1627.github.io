@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gptjs409.github.io/sitemap.xml
+Sitemap: https://k-1627.github.io/sitemap.xml
