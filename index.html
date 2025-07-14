@@ -57,8 +57,9 @@
             font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         .container {
-            display: flex;
-            height: 100%;
+            display: flex !important;
+            height: 100vh !important;
+            min-height: 600px !important;
         }
         .sidebar {
             width: 350px;
@@ -69,9 +70,11 @@
             z-index: 1000;
         }
         #map {
-            flex: 1;
-            height: 100%;
-            z-index: 900;
+            flex: 1 !important;
+            height: 100vh !important;
+            min-height: 400px !important;
+            z-index: 900 !important;
+            display: block !important;
         }
         h1 {
             margin-top: 0;
@@ -1252,7 +1255,53 @@
         }
 
         // 페이지 로드 시 실행
-        window.onload = initMap;
+        window.onload = function() {
+            // AdSense 로드를 기다린 후 지도 초기화
+            setTimeout(() => {
+                initMap();
+                
+                // 추가적인 지도 크기 재조정
+                setTimeout(() => {
+                    if (map) {
+                        map.invalidateSize();
+                        console.log('지도 크기 재조정 완료');
+                    }
+                }, 1000);
+                
+                // 주기적으로 지도 크기 체크 및 재조정
+                setInterval(() => {
+                    if (map) {
+                        map.invalidateSize();
+                    }
+                }, 3000);
+                
+            }, 500);
+            
+            // 페이지 크기 변경 감지
+            window.addEventListener('resize', () => {
+                if (map) {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 100);
+                }
+            });
+            
+            // DOM 변화 감지 (AdSense가 레이아웃 변경할 때)
+            const observer = new MutationObserver(() => {
+                if (map) {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 100);
+                }
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+        };
     </script>
     
     <!-- 추가 SEO 마크업 -->
